@@ -1,0 +1,20 @@
+Congestion (C) :  4
+node avg delays stations
+$601 1439.85714286
+$2999 800.0
+$10227 767.021754323
+$7429 665.594004024
+mean delay: 5.31497695077
+$601
+end_to_end delays train , delays
+06336 31771.4063293
+06046 15067.5926246
+16617 13435.376473
+06034 13250.2758693
+mean end-to-end delay514.488592954
+no of delays  , station v no_of_delays
+$6948 63
+$6947 51
+ERN 50
+$6949 49
+mean no_of_delays5.3017699115

@@ -1,0 +1,22 @@
+Congestion (C) :  4
+
+node avg delays stations
+MVN 1442.07447667
+TVP 800.0
+TVP 799.010728887
+TMQ 755.744289902
+mean delay: 5.47222449916
+
+end_to_end delays train , delays
+06336 31386.5817836
+06046 15160.1991797
+06034 13092.1432482
+
+mean end-to-end delay : 529.712138632
+
+no of delays  , station v no_of_delays
+ERN 61
+TBM 60
+MBM 46
+
+mean no_of_delays : 4.30550918197
