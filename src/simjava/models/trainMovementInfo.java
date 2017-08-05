@@ -20,20 +20,7 @@ public class trainMovementInfo {
 		generatingNode = gn;
 		train_id = id;
 		protocol = p;
-		if (p == 3) {
-			Sim_normal_obj normalDist = new Sim_normal_obj("normal", globals.mean, globals.var);
-      speed = globals.speedMap.get(train_id) + (normalDist.sample());
-		} else {
-			speed = s;
-		}
+		speed = s;
 	}
-
-	public trainMovementInfo(Globals globals, List<String> r, String gn,String id, int p) {
-		route = r;
-		generatingNode = gn;
-		train_id = id;
-		protocol = p;
-		speed = 45.0;
-	}
-
 }
+// without creating new objects code TODO

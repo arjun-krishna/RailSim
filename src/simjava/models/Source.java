@@ -36,13 +36,14 @@ public class Source extends Sim_entity {
       List<Integer> weeklyInfo = globals.weeklySchedule.get(train_id);
       for(int i=0; i<weeklyInfo.size(); i++){
         if(Integer.parseInt(""+weeklyInfo.get(i)) == 1){
+          
           List<String> tempRoute = new ArrayList<String>();
           for(String x:route){
             tempRoute.add(x);
           }
+          // Removing first node
           String startNode = tempRoute.get(0);
           tempRoute.remove(0);
-
           Double speed = 45.0;
           Double delay = 0.0;
 
@@ -76,8 +77,10 @@ public class Source extends Sim_entity {
               Sim_uniform_obj uniDist = new Sim_uniform_obj("uniform", 1, max_delay);
               speed = globals.speedHash.get(train_id + startNode).doubleValue();     // default speed
               delay = uniDist.sample();
+              break;
             }
           }
+
 
           trainMovementInfo info = new trainMovementInfo(globals, tempRoute, "Source", train_id,  globals.protocol, speed);
           sim_schedule(out.get(startNode), timestamp + delay + i*86400, 0, info);

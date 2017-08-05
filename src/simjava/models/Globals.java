@@ -13,14 +13,9 @@ public class Globals {
   /* Network Parameters */
   public int linkDistance = 3;          // distance between signal nodes(in km)
   public double signalDelay = 0.0;   // Signal Delay for linkDistance
-  public double trainDelay = 240;         // Train Delay for linkDistance [Fixed speed simulation]
-
-  public Double SPEED_Exp = 45.0;
-  public Double SPEED_Pass = 45.0;
-  public Double SPEED_SF = 45.0;
 
   /* LMR Protocol */
-  public int protocol = 3;
+  public int protocol = 5;
   // 0 - Default [No LMR]
   // 1 - delay at source [LMR]
   // 2 - every train sent with a initial velocity picked by a normal distribution
@@ -35,16 +30,19 @@ public class Globals {
   /*protocol 1*/
   public double alpha = 1000.0;
 
-  /*protocol 2(or)3*/
+  /*protocol 2*/
   public double mean = 0;
   public double var = 5;
+
+  /* protocol 3 */
   public double p3Beta = 0.15;
 
   /*protocol 4*/
   public double beta = 300;
   public double frame_size = Math.log(dilation);
 
-
+  /* protocol 5 */
+  public double reductionFactor = 0.5;
 
   // Adjacency List, station to reachable stations
   // This defines the Railway Station Network
@@ -52,7 +50,6 @@ public class Globals {
   public HashMap<String, List<String> > adjL;
   public HashMap<String, HashMap<String,Double> > haltMap;
   public HashMap<String, Integer > platformMap;
-  public HashMap<String, Double > speedMap;
   public HashMap<String, List<Integer> > weeklySchedule;
   // Schedule object contains
   // the route of the train, hashed to the a timestamp at which the
@@ -62,7 +59,7 @@ public class Globals {
   public HashMap<Double, String> TrainIdentifier;
 
   // Lock of all nodes
-  public Lock LOCK;
+  public GlobalLocks GLS;
 
   // Constructor
   // param : args [contains file to load train route data]
@@ -74,10 +71,9 @@ public class Globals {
     TrainIdentifier = new HashMap<Double, String>();
     haltMap = new HashMap<String, HashMap<String,Double> >() ;
     platformMap = new HashMap<String, Integer >();
-    speedMap = new HashMap<String, Double >();
     speedHash = new HashMap<String, Long >();
     weeklySchedule = new HashMap<String, List<Integer> >();
-    LOCK = new Lock();
+    GLS = new GlobalLocks();
     this.loadDataFromJson(args);
 
   };
@@ -119,7 +115,6 @@ public class Globals {
       
 
       for (Object elem : data) {
-
         JSONObject train = (JSONObject) elem;
         List<String> route  = (List<String>) train.get("route");
         List<Long> speeds = (List<Long>) train.get("speed");
@@ -159,31 +154,13 @@ public class Globals {
         platformMap.put(stationCode, platformCount);
       }
 
-      JSONObject typeInfo = (JSONObject) parser.parse(new FileReader(folder + "type.json"));
-      for (Object key : typeInfo.keySet()) {
-        String trainId = (String) key;
-        String type = (String) typeInfo.get(trainId);
-        if(type.equals("SF")){
-          speedMap.put(trainId, SPEED_SF);
-        }
-        else if(type.equals("Pass")){
-          speedMap.put(trainId, SPEED_Pass);
-        }
-        else if(type.equals("Exp")){
-          speedMap.put(trainId, SPEED_Exp);
-        }
-        else {
-          speedMap.put(trainId, SPEED_Pass);
-        }
-      }
-
       JSONObject weeklySched = (JSONObject) parser.parse(new FileReader(folder + "wod.json"));
       for (Object key : weeklySched.keySet()) {
         String train_id = (String) key;
         weeklySchedule.put(train_id,(List<Integer>) weeklySched.get(train_id));
       }
 
-      LOCK.init(adjL, platformMap);
+      GLS.init(adjL, platformMap);
     }
     catch(Exception e) { // Some error occured while reading!
       System.err.println(e);
